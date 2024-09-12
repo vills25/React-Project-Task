@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Container, Row, Col, Button, Navbar, Nav, Form, ListGroup, Card, Dropdown } from 'react-bootstrap';
+import { Container, Row, Col, Button, Navbar, Nav, Form, ListGroup, Card, Dropdown, Modal } from 'react-bootstrap';
 import ReactPaginate from 'react-paginate';
 import { FaSortUp, FaSortDown } from 'react-icons/fa';
 
@@ -18,9 +18,14 @@ const HomePage = ({ logout }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [sortField, setSortField] = useState('name');
   const [sortOrder, setSortOrder] = useState('asc');
+  const [editModal, setEditModal] = useState(false);
+  const [currentProduct, setCurrentProduct] = useState(null);
+  const [editedName, setEditedName] = useState('');
+  const [editedPrice, setEditedPrice] = useState('');
+  const [editedDetails, setEditedDetails] = useState('');
   const productsPerPage = 3;
 
-  // Filter products based on selected category and search query
+  // Filter and sort products
   const filteredProducts = products
     .filter(product =>
       selectedCategory === 'All' || product.category === selectedCategory
@@ -29,7 +34,6 @@ const HomePage = ({ logout }) => {
       product.name.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
-  // Sort products based on selected field and order
   const sortedProducts = filteredProducts.slice().sort((a, b) => {
     if (sortField === 'name') {
       const comparison = a.name.localeCompare(b.name);
@@ -67,6 +71,25 @@ const HomePage = ({ logout }) => {
 
   const toggleSortOrder = () => {
     setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
+  };
+
+  // Open Edit Modal
+  const handleEditProduct = (product) => {
+    setCurrentProduct(product);
+    setEditedName(product.name);
+    setEditedPrice(product.price);
+    setEditedDetails(product.details);
+    setEditModal(true);
+  };
+
+  // Save edited product
+  const handleSaveProduct = () => {
+    setProducts(products.map(product =>
+      product.id === currentProduct.id
+        ? { ...product, name: editedName, price: parseFloat(editedPrice), details: editedDetails }
+        : product
+    ));
+    setEditModal(false);
   };
 
   return (
@@ -167,7 +190,8 @@ const HomePage = ({ logout }) => {
                       <Card.Title>{product.name}</Card.Title>
                       <Card.Subtitle className="mb-2 text-muted">${product.price.toFixed(2)}</Card.Subtitle>
                       <Card.Text>{product.details}</Card.Text>
-                      <Button variant="danger" onClick={() => handleRemoveProduct(product.id)}>Remove</Button>
+                      <Button variant="danger" className="mr-2" onClick={() => handleRemoveProduct(product.id)}>Remove</Button>
+                      <Button variant="secondary" onClick={() => handleEditProduct(product)}>Edit</Button>
                     </Card.Body>
                   </Card>
                 </Col>
@@ -194,6 +218,49 @@ const HomePage = ({ logout }) => {
           </Col>
         </Row>
       </Container>
+
+      {/* Edit Product Modal */}
+      <Modal show={editModal} onHide={() => setEditModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Edit Product</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form>
+            <Form.Group controlId="editProductName">
+              <Form.Label>Product Name</Form.Label>
+              <Form.Control
+                type="text"
+                value={editedName}
+                onChange={(e) => setEditedName(e.target.value)}
+              />
+            </Form.Group>
+            <Form.Group controlId="editProductPrice" className="mt-2">
+              <Form.Label>Price</Form.Label>
+              <Form.Control
+                type="number"
+                value={editedPrice}
+                onChange={(e) => setEditedPrice(e.target.value)}
+              />
+            </Form.Group>
+            <Form.Group controlId="editProductDetails" className="mt-2">
+              <Form.Label>Details</Form.Label>
+              <Form.Control
+                type="text"
+                value={editedDetails}
+                onChange={(e) => setEditedDetails(e.target.value)}
+              />
+            </Form.Group>
+          </Form>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setEditModal(false)}>
+            Cancel
+          </Button>
+          <Button variant="primary" onClick={handleSaveProduct}>
+            Save Changes
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </>
   );
 };
