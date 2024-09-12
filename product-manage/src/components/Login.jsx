@@ -10,10 +10,9 @@ const Login = ({ login }) => {
 
   const handleLogin = (e) => {
     e.preventDefault();
-  
+
     const storedUser = JSON.parse(localStorage.getItem('user'));
-  
-    // Check credentials match
+
     if (storedUser && storedUser.email === email && storedUser.password === password) {
       login();
       navigate('/home');
