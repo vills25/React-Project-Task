@@ -1,38 +1,72 @@
 import React, { useState } from 'react';
-import { Container, Row, Col, Button, Navbar, Nav, ListGroup, Form } from 'react-bootstrap';
+import { Container, Row, Col, Button, Navbar, Nav, Form, ListGroup, Card, Dropdown } from 'react-bootstrap';
 import ReactPaginate from 'react-paginate';
+import { FaSortUp, FaSortDown } from 'react-icons/fa';
 
 const HomePage = ({ logout }) => {
   const [products, setProducts] = useState([
-    { id: 1, name: 'Product 1', category: 'Category 1' },
-    { id: 2, name: 'Product 2', category: 'Category 2' },
-    { id: 3, name: 'Product 3', category: 'Category 3' },
+    { id: 1, name: 'Product 1', category: 'Clothes', photo: 'https://via.placeholder.com/150', price: 50, details: 'Details about Product 1' },
+    { id: 2, name: 'Product 2', category: 'Shoes', photo: 'https://via.placeholder.com/150', price: 80, details: 'Details about Product 2' },
+    { id: 3, name: 'Product 3', category: 'Watches', photo: 'https://via.placeholder.com/150', price: 120, details: 'Details about Product 3' },
   ]);
 
   const [newProduct, setNewProduct] = useState('');
+  const [newPrice, setNewPrice] = useState('');
+  const [newDetails, setNewDetails] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [currentPage, setCurrentPage] = useState(0);
-  const productsPerPage = 5;
+  const [searchQuery, setSearchQuery] = useState('');
+  const [sortField, setSortField] = useState('name');
+  const [sortOrder, setSortOrder] = useState('asc');
+  const productsPerPage = 3;
 
-  // Pagination logic
-  const filteredProducts = selectedCategory === 'All' ? products : products.filter(p => p.category === selectedCategory);
-  const pageCount = Math.ceil(filteredProducts.length / productsPerPage);
+  // Filter products based on selected category and search query
+  const filteredProducts = products
+    .filter(product =>
+      selectedCategory === 'All' || product.category === selectedCategory
+    )
+    .filter(product =>
+      product.name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+
+  // Sort products based on selected field and order
+  const sortedProducts = filteredProducts.slice().sort((a, b) => {
+    if (sortField === 'name') {
+      const comparison = a.name.localeCompare(b.name);
+      return sortOrder === 'asc' ? comparison : -comparison;
+    } else if (sortField === 'price') {
+      const comparison = a.price - b.price;
+      return sortOrder === 'asc' ? comparison : -comparison;
+    }
+    return 0;
+  });
+
+  const pageCount = Math.ceil(sortedProducts.length / productsPerPage);
   const offset = currentPage * productsPerPage;
-  const currentProducts = filteredProducts.slice(offset, offset + productsPerPage);
+  const currentProducts = sortedProducts.slice(offset, offset + productsPerPage);
 
-  const handlePageClick = ({ selected }) => {
-    setCurrentPage(selected);
-  };
+  const handlePageClick = ({ selected }) => setCurrentPage(selected);
 
   const handleAddProduct = () => {
-    const id = products.length + 1;
-    const category = selectedCategory !== 'All' ? selectedCategory : 'Category 1'; // Default category
-    setProducts([...products, { id, name: newProduct, category }]);
+    const newId = products.length + 1;
+    const category = selectedCategory !== 'All' ? selectedCategory : 'Clothes';
+    setProducts([...products, {
+      id: newId,
+      name: newProduct,
+      category,
+      photo: 'https://via.placeholder.com/150', // Default photo
+      price: parseFloat(newPrice),
+      details: newDetails
+    }]);
     setNewProduct('');
+    setNewPrice('');
+    setNewDetails('');
   };
 
-  const handleRemoveProduct = (id) => {
-    setProducts(products.filter(p => p.id !== id));
+  const handleRemoveProduct = (id) => setProducts(products.filter(product => product.id !== id));
+
+  const toggleSortOrder = () => {
+    setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
   };
 
   return (
@@ -42,26 +76,36 @@ const HomePage = ({ logout }) => {
         <Container>
           <Navbar.Brand>Product Dashboard</Navbar.Brand>
           <Nav className="ml-auto">
-            <Button onClick={logout}>Logout</Button>
+            <Form className="d-flex">
+              <Form.Control
+                type="search"
+                placeholder="Search"
+                className="mr-2"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+              <Button variant="outline-primary" onClick={logout}>Logout</Button>
+            </Form>
           </Nav>
         </Container>
       </Navbar>
 
-      <Container fluid>
+      <Container fluid className="mt-4">
         <Row>
           {/* Sidebar for Categories */}
           <Col md={2}>
+            <h5>Categories</h5>
             <ListGroup>
               <ListGroup.Item action onClick={() => setSelectedCategory('All')} active={selectedCategory === 'All'}>
-                All Categories
+                All Products
               </ListGroup.Item>
-              <ListGroup.Item action onClick={() => setSelectedCategory('Category 1')} active={selectedCategory === 'Category 1'}>
+              <ListGroup.Item action onClick={() => setSelectedCategory('Clothes')} active={selectedCategory === 'Clothes'}>
                 Clothes
               </ListGroup.Item>
-              <ListGroup.Item action onClick={() => setSelectedCategory('Category 2')} active={selectedCategory === 'Category 2'}>
+              <ListGroup.Item action onClick={() => setSelectedCategory('Shoes')} active={selectedCategory === 'Shoes'}>
                 Shoes
               </ListGroup.Item>
-              <ListGroup.Item action onClick={() => setSelectedCategory('Category 3')} active={selectedCategory === 'Category 3'}>
+              <ListGroup.Item action onClick={() => setSelectedCategory('Watches')} active={selectedCategory === 'Watches'}>
                 Watches
               </ListGroup.Item>
             </ListGroup>
@@ -69,32 +113,66 @@ const HomePage = ({ logout }) => {
 
           {/* Main Content */}
           <Col md={10}>
-            <h2 className="my-4">Products</h2>
+            <h2 className="my-4">
+              Products 
+              <Dropdown className="d-inline mx-2">
+                <Dropdown.Toggle variant="link">
+                  Sort by {sortField.charAt(0).toUpperCase() + sortField.slice(1)}
+                </Dropdown.Toggle>
+                <Dropdown.Menu>
+                  <Dropdown.Item onClick={() => { setSortField('name'); toggleSortOrder(); }}>
+                    Name {sortOrder === 'asc' ? <FaSortUp /> : <FaSortDown />}
+                  </Dropdown.Item>
+                  <Dropdown.Item onClick={() => { setSortField('price'); toggleSortOrder(); }}>
+                    Price {sortOrder === 'asc' ? <FaSortUp /> : <FaSortDown />}
+                  </Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
+            </h2>
 
             {/* Add New Product */}
-            <Form.Group>
+            <Form.Group controlId="addProduct">
               <Form.Control
                 type="text"
-                placeholder="Add New Product"
+                placeholder="Product Name"
                 value={newProduct}
                 onChange={(e) => setNewProduct(e.target.value)}
               />
-              <Button className="mt-2" onClick={handleAddProduct}>
+              <Form.Control
+                type="number"
+                placeholder="Price"
+                className="mt-2"
+                value={newPrice}
+                onChange={(e) => setNewPrice(e.target.value)}
+              />
+              <Form.Control
+                type="text"
+                placeholder="Details"
+                className="mt-2"
+                value={newDetails}
+                onChange={(e) => setNewDetails(e.target.value)}
+              />
+              <Button className="mt-2" variant="primary" onClick={handleAddProduct}>
                 Add Product
               </Button>
             </Form.Group>
 
             {/* Product List */}
-            <ListGroup>
-              {currentProducts.map((product) => (
-                <ListGroup.Item key={product.id} className="d-flex justify-content-between">
-                  {product.name}
-                  <Button variant="danger" onClick={() => handleRemoveProduct(product.id)}>
-                    Remove
-                  </Button>
-                </ListGroup.Item>
+            <Row className="mt-3">
+              {currentProducts.map(product => (
+                <Col md={4} key={product.id} className="mb-3">
+                  <Card className="product-card">
+                    <Card.Img variant="top" src={product.photo} />
+                    <Card.Body>
+                      <Card.Title>{product.name}</Card.Title>
+                      <Card.Subtitle className="mb-2 text-muted">${product.price.toFixed(2)}</Card.Subtitle>
+                      <Card.Text>{product.details}</Card.Text>
+                      <Button variant="danger" onClick={() => handleRemoveProduct(product.id)}>Remove</Button>
+                    </Card.Body>
+                  </Card>
+                </Col>
               ))}
-            </ListGroup>
+            </Row>
 
             {/* Pagination */}
             <div className="d-flex justify-content-center mt-4">

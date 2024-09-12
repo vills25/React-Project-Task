@@ -11,14 +11,11 @@ const SignUp = () => {
 
     const handleSignUp = (e) => {
         e.preventDefault();
-
-        // Check if passwords match
         if (password !== confirmPassword) {
             alert('Passwords do not match!');
             return;
         }
 
-        // Store email and password in localStorage
         localStorage.setItem('user', JSON.stringify({ email, password }));
         alert('Sign-Up Successful! Please log in.');
         navigate('/login');
