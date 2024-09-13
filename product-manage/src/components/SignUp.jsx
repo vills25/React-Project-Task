@@ -22,47 +22,49 @@ const SignUp = () => {
     };
 
     return (
-        <Container>
-            <h2 className="text-center my-4">Sign Up</h2>
-            <Form onSubmit={handleSignUp}>
-                <Form.Group>
-                    <Form.Label>Email</Form.Label>
-                    <Form.Control
-                        type="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        required
-                    />
-                </Form.Group>
+        <Container className="d-flex justify-content-center align-items-center" style={{ height: '100vh' }}>
+            <div className="card p-4" style={{ width: '400px' }}>
+                <h2 className="text-center mb-4">SignUp</h2>
+                <Form onSubmit={handleSignUp}>
+                    <Form.Group>
+                        <Form.Label>Email</Form.Label>
+                        <Form.Control
+                            type="email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            required
+                        />
+                    </Form.Group>
 
-                <Form.Group>
-                    <Form.Label>Password</Form.Label>
-                    <Form.Control
-                        type="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        required
-                    />
-                </Form.Group>
+                    <Form.Group>
+                        <Form.Label>Password</Form.Label>
+                        <Form.Control
+                            type="password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            required
+                        />
+                    </Form.Group>
 
-                <Form.Group>
-                    <Form.Label>Confirm Password</Form.Label>
-                    <Form.Control
-                        type="password"
-                        value={confirmPassword}
-                        onChange={(e) => setConfirmPassword(e.target.value)}
-                        required
-                    />
-                </Form.Group>
+                    <Form.Group>
+                        <Form.Label>Confirm Password</Form.Label>
+                        <Form.Control
+                            type="password"
+                            value={confirmPassword}
+                            onChange={(e) => setConfirmPassword(e.target.value)}
+                            required
+                        />
+                    </Form.Group>
 
-                <Button type="submit" className="mt-3" variant="primary" block>
-                    Sign Up
-                </Button>
-            </Form>
+                    <Button type="submit" className="mt-3" variant="primary" block>
+                        Sign Up
+                    </Button>
+                </Form>
 
-            <p>
-                Already have an account? <Link to="/login">Log In</Link>
-            </p>
+                <p>
+                    Already have an account? <Link to="/login">Log In</Link>
+                </p>
+            </div>
         </Container>
     );
 };

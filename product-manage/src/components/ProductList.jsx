@@ -34,7 +34,7 @@ const ProductList = () => {
         {filteredProducts.length > 0 ? (
           filteredProducts.map((product) => (
             <div className="col-md-4 mb-4" key={product.id}>
-              <div className="card" style={{ width: '18rem' }}>
+              <div className="card" style={{ width: '13rem' }}>
                 <img src={product.image} className="card-img-top" alt={product.name} />
                 <div className="card-body">
                   <h5 className="card-title">
@@ -57,13 +57,6 @@ const ProductList = () => {
                       onChange={(e) => handleProductEdit(product.id, 'price', e.target.value)}
                     />
                   </p>
-                </div>
-                <ul className="list-group list-group-flush">
-                  <li className="list-group-item">Product ID: {product.id}</li>
-                </ul>
-                <div className="card-body">
-                  <a href="#" className="card-link">View Details</a>
-                  <a href="#" className="card-link">Add to Cart</a>
                 </div>
               </div>
             </div>

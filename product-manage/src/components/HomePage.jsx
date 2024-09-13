@@ -23,6 +23,8 @@ const HomePage = ({ logout }) => {
   const [editedName, setEditedName] = useState('');
   const [editedPrice, setEditedPrice] = useState('');
   const [editedDetails, setEditedDetails] = useState('');
+  const [newImage, setNewImage] = useState('');
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const productsPerPage = 3;
 
   // Filter and sort products
@@ -58,14 +60,17 @@ const HomePage = ({ logout }) => {
       id: newId,
       name: newProduct,
       category,
-      photo: 'https://via.placeholder.com/150', // Default photo
+      photo: newImage || 'https://via.placeholder.com/150',
       price: parseFloat(newPrice),
       details: newDetails
     }]);
+    // Clear inputs
     setNewProduct('');
     setNewPrice('');
     setNewDetails('');
+    setNewImage('');
   };
+  
 
   const handleRemoveProduct = (id) => setProducts(products.filter(product => product.id !== id));
 
@@ -137,7 +142,7 @@ const HomePage = ({ logout }) => {
           {/* Main Content */}
           <Col md={10}>
             <h2 className="my-4">
-              Products 
+              Products
               <Dropdown className="d-inline mx-2">
                 <Dropdown.Toggle variant="link">
                   Sort by {sortField.charAt(0).toUpperCase() + sortField.slice(1)}
@@ -248,6 +253,23 @@ const HomePage = ({ logout }) => {
                 type="text"
                 value={editedDetails}
                 onChange={(e) => setEditedDetails(e.target.value)}
+              />
+            </Form.Group>
+            <Form.Group controlId="productImageUpload">
+              <Form.Label>Product Image</Form.Label>
+              <Form.Control
+                type="file"
+                accept="image/*"
+                onChange={(e) => {
+                  const file = e.target.files[0];
+                  const reader = new FileReader();
+                  reader.onloadend = () => {
+                    setNewImage(reader.result);
+                  };
+                  if (file) {
+                    reader.readAsDataURL(file);
+                  }
+                }}
               />
             </Form.Group>
           </Form>
