@@ -2,3 +2,18 @@
     max-width: 130px;
     margin: auto;
   }
+
+.app-layout {
+  display: flex;
+}
+
+.main-content {
+  width: calc(100% - 250px);
+  transition: width 0.3s ease;
+  padding: 20px;
+}
+
+.app-layout.collapsed .main-content {
+  width: calc(100% - 80px);
+}
+  

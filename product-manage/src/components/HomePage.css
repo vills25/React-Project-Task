@@ -1,0 +1,59 @@
+/* General Navbar Styling */
+.custom-navbar {
+    padding: 1rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+  }
+  
+  .search-form {
+    margin-right: 1rem;
+  }
+  
+  /* Sidebar Styling */
+  .sidebar {
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-radius: 5px;
+  }
+  
+  .sidebar h5 {
+    margin-bottom: 20px;
+  }
+  
+  .category-item {
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+  }
+  
+  .category-item:hover, .category-item.active {
+    background-color: #343a40;
+    color: white;
+  }
+  
+  /* Product Cards */
+  .product-card {
+    transition: transform 0.3s;
+  }
+  
+  .product-card:hover {
+    transform: translateY(-10px);
+  }
+  
+  .card-img-top {
+    height: 200px;
+    object-fit: cover;
+  }
+  
+  /* Pagination Styling */
+  .pagination .page-item .page-link {
+    color: #6c757d;
+  }
+  
+  .pagination .page-item.active .page-link {
+    background-color: #343a40;
+    border-color: #343a40;
+    color: white;
+  }
+  

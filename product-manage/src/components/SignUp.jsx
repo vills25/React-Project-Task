@@ -25,7 +25,7 @@ const SignUp = () => {
         <Container className="d-flex justify-content-center align-items-center" style={{ height: '100vh' }}>
             <div className="card p-4" style={{ width: '400px' }}>
                 <h2 className="text-center mb-4">SignUp</h2>
-                <Form onSubmit={handleSignUp}>
+                <Form onSubmit={handleSignUp}> 
                     <Form.Group>
                         <Form.Label>Email</Form.Label>
                         <Form.Control
