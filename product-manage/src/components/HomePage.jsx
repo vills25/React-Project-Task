@@ -6,9 +6,10 @@ import './HomePage.css';
 
 const HomePage = ({ logout }) => {
   const [products, setProducts] = useState([
-    { id: 1, name: 'Product 1', category: 'Clothes', photo: 'https://via.placeholder.com/150', price: 50, details: 'Details about Product 1' },
-    { id: 2, name: 'Product 2', category: 'Shoes', photo: 'https://via.placeholder.com/150', price: 80, details: 'Details about Product 2' },
-    { id: 3, name: 'Product 3', category: 'Watches', photo: 'https://via.placeholder.com/150', price: 120, details: 'Details about Product 3' },
+    { id: 1, name: 'Clothes', category: 'Clothes', photo: 'https://via.placeholder.com/150', price: 50, details: 'Details about Product 1' },
+    { id: 2, name: 'Shoes', category: 'Shoes', photo: 'https://via.placeholder.com/150', price: 80, details: 'Details about Product 2' },
+    { id: 3, name: 'Watch', category: 'Watches', photo: 'https://via.placeholder.com/150', price: 120, details: 'Details about Product 3' },
+    { id: 4, name: 'Socs', category: 'Socks', photo: 'https://via.placeholder.com/150', price: 90, details: 'Details about Product 4' },
   ]);
 
   const categories = ['Clothes', 'Shoes', 'Watches'];
@@ -84,7 +85,7 @@ const HomePage = ({ logout }) => {
       {/* Navbar */}
       <Navbar bg="dark" variant="dark" expand="lg" className="mb-4 custom-navbar">
         <Container>
-          <Navbar.Brand>Product Dashboard</Navbar.Brand>
+          <Navbar.Brand>VillMart.com</Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="ml-auto">
@@ -129,9 +130,11 @@ const HomePage = ({ logout }) => {
           <Col md={9}>
             <div className="d-flex justify-content-between align-items-center mb-4">
               <h2>Products</h2>
-              <div>
-                <Button variant="primary" onClick={() => handleShowModal()}>Add Product</Button>
-                <Dropdown className="ml-3">
+              <div className="d-flex align-items-center">
+                <Button variant="primary" onClick={() => handleShowModal()} className="me-2">
+                  Add Product
+                </Button>
+                <Dropdown>
                   <Dropdown.Toggle variant="secondary">
                     Sort by {sortField.charAt(0).toUpperCase() + sortField.slice(1)}
                   </Dropdown.Toggle>
@@ -146,6 +149,7 @@ const HomePage = ({ logout }) => {
                 </Dropdown>
               </div>
             </div>
+
 
             {currentProducts.length === 0 ? (
               <div className="no-products-message">
